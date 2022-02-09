@@ -1,0 +1,70 @@
+itemid = 5666 --block
+
+function collectItems()
+pos = getLocal().pos
+for _, obj in pairs(getObjects()) do
+posx = math.abs(pos.x - obj.pos.x)
+posy = math.abs(pos.y - obj.pos.y)
+if posx < 25 and posy < 25 then
+pkt = {}
+pkt.type = 11
+pkt.int_data = obj.oid
+pkt.pos_x = obj.pos.x
+pkt.pos_y = obj.pos.y
+sendPacketRaw(pkt)
+end
+end
+end
+
+function cariJumlahItem(id)
+for _, v in pairs(getInventory()) do
+if v.id == id then
+return v.count
+end
+end
+return 0 -- Jika Tidak Ditemukan Maka Jumlah = 0 | If No Item Found Item Count = 0
+end
+
+function cari(itemid)
+if(cariJumlahItem(itemid) <= 0) then
+collectItems()
+end
+end
+
+function sendPunch(x, y)
+pkt = {}
+pkt.type = 3
+pkt.int_data = 18
+pkt.int_x = x
+pkt.int_y = y
+pkt.pos_x = getLocal().pos.x
+pkt.pos_y = getLocal().pos.y
+sendPacketRaw(pkt)
+end
+
+function sendPlace(x, y)
+pkt = {}
+pkt.type = 3
+pkt.int_data = itemid
+pkt.int_x = x
+pkt.int_y = y
+pkt.pos_x = getLocal().pos.x
+pkt.pos_y = getLocal().pos.y
+sendPacketRaw(pkt)
+end
+
+while true do
+sendPlace((getLocal().pos.x) / 32, getLocal().pos.y / 32 - 2)
+sleep(100)
+sendPlace((getLocal().pos.x) / 32, getLocal().pos.y / 32 - 2)
+sleep(100)
+sendPunch((getLocal().pos.x) / 32, getLocal().pos.y / 32 - 2)
+sleep(100)
+sendPunch((getLocal().pos.x) / 32, getLocal().pos.y / 32 - 2)
+sleep(100)
+sendPlace((getLocal().pos.x) / 32, getLocal().pos.y / 32 - 2)
+sleep(100)
+sendPunch((getLocal().pos.x) / 32, getLocal().pos.y / 32 - 2)
+sleep(100)
+cari(itemid)
+end
